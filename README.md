@@ -1,5 +1,16 @@
 # unix.py
 
-This is absurd and I love it.
+A unix shell monad.
 
-See `usage.py` for examples.
+## examples
+
+```python
+
+import unix
+
+unix.cat('/etc/hosts').grep('[0-9]*')
+
+unix.curl('-s icanhazip.com')
+
+unix.cowsay('hello')
+```
