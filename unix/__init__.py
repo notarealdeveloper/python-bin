@@ -5,19 +5,41 @@ __all__ = (
     'Lines',
 )
 
+import os
+import sys
+import glob
 import shlex
 import subprocess
+
+def get_executables():
+    executables = []
+    for dirname in os.getenv('PATH').split(':'):
+        for pathname in glob.glob(f"{dirname}/*"):
+            if os.path.exists(pathname):
+                if os.stat(pathname).st_mode & 0o111:
+                    basename = os.path.basename(pathname)
+                    executables.append(basename)
+    return sorted(set(executables))
+
+binary_to_identifier = {k:k.replace('-', '_') for k in get_executables()}
+identifier_to_binary = {v:k for k,v in binary_to_identifier.items()}
 
 class Unix:
 
     """ A unix shell monad """
 
-    def __init__(self, text = ""):
+    def __new__(cls, arg=""):
         """
-            Conceptually the following line is just setting "self.text = text",
-            but with an extra bit to ensure idempotence and make us monad-y.
+            Conceptually this is just setting "self.text=text",
+            but with an extra bit to ensure idempotence and
+            make us monadic.
         """
-        self.text = text if not isinstance(text, self.__class__) else text.text
+        if isinstance(arg, cls):
+            self = arg
+        else:
+            self = super().__new__(cls)
+            self.text = arg
+        return self
 
     def __getattribute__(self, name):
         try:    return super().__getattribute__(name)
@@ -25,10 +47,11 @@ class Unix:
 
     def __getattribute_as_unix_cmd__(self, name):
         """ This is where the magic happens """
+        binary_name = identifier_to_binary.get(name, name)
         def cmd(arg = ""):
             arg = str(arg)
             process = subprocess.Popen(
-                [name] + shlex.split(arg),
+                [binary_name] + shlex.split(arg),
                 stdin = subprocess.PIPE,
                 stdout = subprocess.PIPE
             )
@@ -62,6 +85,10 @@ class Unix:
         else:
             cmd = cmd_raw
             return getattr(self, cmd)()
+
+    def __dir__(self):
+        return sorted(binary_to_identifier.values())
+
 
 
 class Lines(list):
@@ -161,13 +188,13 @@ class Lines(list):
         return cmd
 
 
-UPGRADE_MODULE_TO_CLASS_INSTANCE = False
+UPGRADE_MODULE_TO_CLASS_INSTANCE = True
 
 if UPGRADE_MODULE_TO_CLASS_INSTANCE:
 
     # upgrade the module to an instance on import!
-    import sys
-    sys.modules['unix'] = Unix()
+    mod = Unix()
+    sys.modules['unix'] = mod
 
 else:
 
