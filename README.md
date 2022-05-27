@@ -1,6 +1,6 @@
 # unix.py
 
-A unix shell monad. Probably.
+A unix shell monad.
 
 ## examples
 
