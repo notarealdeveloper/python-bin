@@ -1,0 +1,12 @@
+[project]
+name = "unix"
+version = "0.0.1"
+authors = [
+    { name="Jason Wilkes", email="notarealdeveloper@gmail.com" },
+]
+description = "A Unix shell monad"
+dependencies = [
+]
+
+[project.urls]
+source = "https://github.com/notarealdeveloper/unix"
