@@ -1,32 +1,38 @@
-PKG := unix
+PKG = python-bin
 
-build:
-	python -m build
+PYTHON := python
+PIP    := $(PYTHON) -m pip
+PYTEST := $(PYTHON) -m pytest
 
-install: build
-	pip install dist/*.tar.gz
+build: with-build
+	$(PYTHON) -m build
+
+install:
+	$(PIP) install dist/*.tar.gz
 
 develop:
-	pip install -e .
+	$(PIP) install -e .
 
-check:
-	pytest tests
+check: with-pytest
+	$(PYTEST) -v tests
 
 uninstall:
-	pip uninstall $(PKG)
+	$(PIP) uninstall $(PKG)
 
 clean:
-	rm -rv dist/ build/ src/*.egg-info
+	@rm -rvf dist/ build/ src/*.egg-info
 
-push-test:
-	python -m twine upload --repository testpypi dist/*
+push-test: with-twine
+	$(PYTHON) -m twine upload --repository testpypi dist/*
 
 pull-test:
-	pip install -i https://test.pypi.org/simple/ $(PKG)
+	$(PIP) install -i https://test.pypi.org/simple/ $(PKG)
 
-push-prod:
-	python -m twine upload dist/*
+push-prod: with-twine
+	$(PYTHON) -m twine upload dist/*
 
 pull-prod:
-	pip install $(PKG)
+	$(PIP) install $(PKG)
 
+with-%:
+	@$(PYTHON) -c 'import $*' &>/dev/null || $(PIP) install $*

@@ -62,6 +62,9 @@ class Unix:
             return self.__class__(output_as_text) # be monadic
         return cmd
 
+    def __eq__(self, other):
+        return str(self) == str(other)
+
     def __repr__(self):
         return self.text
 
@@ -194,7 +197,7 @@ if UPGRADE_MODULE_TO_CLASS_INSTANCE:
 
     # upgrade the module to an instance on import!
     mod = Unix()
-    sys.modules['unix'] = mod
+    sys.modules[__name__] = mod
 
 else:
 

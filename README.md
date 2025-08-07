@@ -1,16 +1,15 @@
-# unix.py
+# bin
 
 A unix shell monad.
 
 ## examples
 
 ```python
+import bin
 
-import unix
+bin.cat('/etc/hosts').grep('[0-9]*')
 
-unix.cat('/etc/hosts').grep('[0-9]*')
+bin.curl('-s icanhazip.com')
 
-unix.curl('-s icanhazip.com')
-
-unix.cowsay('hello')
+bin.cowsay('hello')
 ```

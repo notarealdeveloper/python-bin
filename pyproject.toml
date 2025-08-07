@@ -1,12 +1,13 @@
 [project]
-name = "unix"
+name = "python-bin"
 version = "0.0.1"
 authors = [
     { name="Jason Wilkes", email="notarealdeveloper@gmail.com" },
 ]
-description = "A Unix shell monad"
+description = "Self-explanatory"
 dependencies = [
+    "python-cowsay",
 ]
 
 [project.urls]
-source = "https://github.com/notarealdeveloper/unix"
+source = "https://github.com/notarealdeveloper/bin"
