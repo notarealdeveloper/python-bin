@@ -10,4 +10,4 @@ dependencies = [
 ]
 
 [project.urls]
-source = "https://github.com/notarealdeveloper/bin"
+source = "https://github.com/notarealdeveloper/python-bin"
